@@ -1,0 +1,6 @@
+# Kaggle-only runtime requirements for the offline synthetic phase.
+# Versions must be resolved and recorded in Kaggle; this project has no verified lockfile.
+numpy
+pytest
+torch
+torch-geometric

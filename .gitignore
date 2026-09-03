@@ -1,0 +1,20 @@
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+
+# Project 04 must never store raw biomedical data or private model artifacts.
+*.pdb
+*.cif
+*.sdf
+*.mol
+*.pqt
+*.parquet
+*.pt
+*.pth
+*.ckpt
+.env
+.env.*
