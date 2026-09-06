@@ -157,6 +157,49 @@ $payload = @{ continue = $true; status = 'ok'; systemMessage = '...'; suppressOu
 
 ---
 
+## Example Usage
+
+The library works offline without real data. These examples run against synthetic fixtures — they are the same fixtures the test suite uses.
+
+```python
+from afbind.data.pdbbind import AffinityParser, ConcentrationUnit
+
+# Parse a Ki record (pKi = -log10(Ki in mol/L))
+record = AffinityParser.parse({
+    "pdb_id": "1abc",
+    "measurement_type": "Ki",
+    "value": 10.0,
+    "unit": ConcentrationUnit.NANOMOLAR,
+})
+print(record.pki)  # 8.0
+
+# Build a leakage-safe split manifest
+from afbind.data.splits import build_target_grouped_manifest
+manifest = build_target_grouped_manifest(records, seed=42)
+print(manifest.train_ids, manifest.validation_ids, manifest.test_ids)
+
+# Compute pocket CA-RMSD
+from afbind.analysis.metrics import pocket_ca_rmsd
+result = pocket_ca_rmsd(experimental_coords, af2_coords, residue_keys)
+# returns float | None (None if < 3 common residues or degenerate geometry)
+```
+
+**Real usage** (PDBBind + AlphaFold API) is blocked until data access is approved. See "What the Benchmark Will Measure" below.
+
+---
+
+## Limitations
+
+- **No real benchmark numbers exist.** All tests run against synthetic fixtures — no PDBBind labels, AF2 structures, or affinity predictions are included or have been produced.
+- **RDKit required for real ECFP6.** The `ligand_graph` module reports `dependency_unavailable` when RDKit is absent; offline tests use a synthetic adapter.
+- **GraphGPS has not been trained on any data.** The trainer boundary is smoke-tested on CPU synthetic fixtures only.
+- **The pocket graph requires an experimental co-crystal pose.** AF2 predictions lack the bound-ligand pose; explicit pocket-definition logic is required before a real substitution run.
+- **The benchmark split is grouped by protein target and ligand scaffold.** A random split alone is not sufficient and is not provided.
+- **The future Gradio viewer is limited to cached benchmark records.** It is not a general docking predictor.
+- **GPU training has not been run.** GraphGPS training requires a Kaggle GPU job after data access gates open.
+
+---
+
 ## What the Benchmark Will Measure
 
 Once PDBBind 2020, SIFTS, and AlphaFold API access are secured, the benchmark runs in this order:
