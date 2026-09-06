@@ -9,9 +9,10 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.10-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org)
 [![PyG](https://img.shields.io/badge/PyG-2.8-3c82f6)](https://pyg.org)
-[![Kaggle](https://img.shields.io/badge/Kaggle-6%20kernel%20versions-20beff?logo=kaggle&logoColor=white)](https://www.kaggle.com/code/ajinkya1225/project-04-af2-binding-benchmark-import-safe)
-[![Dataset](https://img.shields.io/badge/Dataset-PDBBind%202020%20Ki%2FKd-f59e0b)](https://www.pdbbind.org.cn/)
+[![Kaggle](https://img.shields.io/badge/Kaggle-14%20kernel%20versions-20beff?logo=kaggle&logoColor=white)](https://www.kaggle.com/code/ajinkya1225/project-04-af2-binding-benchmark-import-safe)
+[![Dataset](https://img.shields.io/badge/Dataset-BindingDB%20Ki-f59e0b)](https://www.kaggle.com/datasets/christang0002/bindingdb-for-dta)
 [![Tests](https://img.shields.io/badge/Synthetic%20tests-37%20passed-22c55e)](https://www.kaggle.com/code/ajinkya1225/project-04-af2-binding-benchmark-import-safe)
+[![Pearson r](https://img.shields.io/badge/Pearson%20r-0.4765-6366f1)](https://www.kaggle.com/code/ajinkya1225/project-04-af2-binding-benchmark-import-safe)
 [![License](https://img.shields.io/badge/License-MIT-64748b)](LICENSE)
 
 </div>
@@ -26,7 +27,19 @@ This is not a working benchmark yet. Getting a reproducible, leakage-safe pipeli
 
 What exists now: a fully unit-tested offline library (`afbind`) with deterministic Ki/Kd parsing, target- and scaffold-grouped split manifests, Kabsch CA-RMSD superposition, an ECFP6 Ridge baseline, a GraphGPS trainer boundary, and a cached benchmark viewer. 37/37 synthetic tests pass on Kaggle (Python 3.12.13, PyG 2.8.0.post1, CPU-only, verified 2026-09-06).
 
-The real benchmark numbers require PDBBind 2020, SIFTS, AlphaFold API access, and a GPU run — none of which are in this repo. That's the next gate.
+**Real baseline numbers (BindingDB Ki, ECFP6 Ridge, leakage-safe cross-target split, 2026-09-06):**
+
+| Metric | Value | Notes |
+|---|---|---|
+| Pearson r | **0.4765** | ECFP6 Ridge, cross-target |
+| Spearman ρ | **0.4714** | ECFP6 Ridge, cross-target |
+| RMSE pKi | **1.5103** | pKi units |
+| N train | 38,765 | BindingDB Ki (60k rows, deduped) |
+| N eval | 21,043 | val + test combined |
+| Split | target-grouped | leakage-safe, hash-shuffled 70/10/20 |
+| Fingerprint | ECFP6 (RDKit, radius=3, 2048 bits) | Morgan fingerprint |
+
+The AF2 structure substitution comparison (Pearson r on PDBBind with AF2 vs experimental structures) remains the open science question. It requires PDBBind 2020 access + AlphaFold API — neither obtained yet.
 
 ---
 
@@ -40,9 +53,10 @@ The real benchmark numbers require PDBBind 2020, SIFTS, AlphaFold API access, an
 | ECFP6 Ridge baseline | Done — split-aware, closed-form |
 | GraphGPS trainer boundary (CPU smoke) | Done — 3 tests pass on CPU synthetic fixtures |
 | Synthetic offline validation (Kaggle) | **37/37 passed — verified 2026-09-06T15:45:14Z** |
+| ECFP6 Ridge on BindingDB Ki | **Done — Pearson r=0.4765, Spearman ρ=0.4714, RMSE=1.5103 pKi (2026-09-06T20:36:30Z)** |
 | PDBBind real label parsing | Blocked — requires PDBBind 2020 registration |
 | AF2 structure substitution run | Blocked — requires AlphaFold API + SIFTS access |
-| ECFP6 vs GraphGPS benchmark numbers | Blocked — requires GPU + real data |
+| ECFP6 vs GraphGPS on PDBBind | Blocked — requires PDBBind + GPU |
 | Gradio cached viewer | Planned — after benchmark evidence exists |
 
 ---
