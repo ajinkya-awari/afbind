@@ -178,7 +178,6 @@ def train_graphgps(
         [_prepare_graph(row) for row in train],
         batch_size=config.batch_size,
         shuffle=True,
-        generator=torch.Generator().manual_seed(config.seed),
     )
     validation_loader = DataLoader(
         [_prepare_graph(row) for row in validation],
