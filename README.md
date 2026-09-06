@@ -235,7 +235,8 @@ flowchart TD
     L[SMILES string] --> M[afbind.data.ligand_graph]
     M -->|RDKit optional| N[GraphValidationResult]
 
-    E & N --> O[afbind.models.fingerprint]
+    E --> O[afbind.models.fingerprint]
+    N --> O
     O -->|closed-form Ridge| P[RidgeBaseline]
 
     Q[Pocket coords] --> R[afbind.analysis.metrics]
@@ -244,8 +245,9 @@ flowchart TD
     T[PDB HETATM] --> U[afbind.analysis.failure_modes]
     U -->|water / metal / Se| V[HeteroReport]
 
-    E & P --> W[afbind.models.graphgps]
-    W -->|Kaggle GPU — blocked| X[GraphGPSTrainingReport]
+    E --> W[afbind.models.graphgps]
+    P --> W
+    W -->|Kaggle GPU, blocked| X[GraphGPSTrainingReport]
 
     X -->|cached only| Y[afbind.viewer.CachedBenchmarkViewer]
 ```
