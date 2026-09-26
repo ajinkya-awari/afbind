@@ -204,13 +204,13 @@ result = pocket_ca_rmsd(experimental_coords, af2_coords, residue_keys)
 
 ## Limitations
 
-- **No real benchmark numbers exist.** All tests run against synthetic fixtures — no PDBBind labels, AF2 structures, or affinity predictions are included or have been produced.
+- **BindingDB Ki baseline numbers exist; PDBBind and AF2 structure substitution numbers do not.** The real benchmark — comparing AF2 structures to experimental co-crystal structures on PDBBind 2020 — requires PDBBind registration and AlphaFold API access, neither of which has been obtained. The Pearson r = 0.4765 result above is an ECFP6 Ridge baseline on BindingDB Ki only; it answers "can fingerprints predict pKi?" not "does AF2 hurt the model?".
 - **RDKit required for real ECFP6.** The `ligand_graph` module reports `dependency_unavailable` when RDKit is absent; offline tests use a synthetic adapter.
 - **GraphGPS has not been trained on any data.** The trainer boundary is smoke-tested on CPU synthetic fixtures only.
 - **The pocket graph requires an experimental co-crystal pose.** AF2 predictions lack the bound-ligand pose; explicit pocket-definition logic is required before a real substitution run.
 - **The benchmark split is grouped by protein target and ligand scaffold.** A random split alone is not sufficient and is not provided.
 - **The future Gradio viewer is limited to cached benchmark records.** It is not a general docking predictor.
-- **GPU training has not been run.** GraphGPS training requires a Kaggle GPU job after data access gates open.
+- **GPU training has not been run.** GraphGPS training requires a Kaggle GPU job after PDBBind data access gates open.
 
 ---
 
@@ -393,7 +393,8 @@ No result is reportable without all of these fields.
   title   = {AlphaFold-Guided Protein--Ligand Binding Benchmark},
   year    = {2026},
   url     = {https://github.com/ajinkya-awari/afbind},
-  note    = {Offline contract library; 37 synthetic tests verified on Kaggle 2026-09-06. Real benchmark pending PDBBind + AF2 API access.}
+  note    = {ECFP6 Ridge baseline on BindingDB Ki: Pearson r=0.4765 (2026-09-06). AF2 vs experimental structure comparison pending PDBBind + AF2 API access.}
+
 }
 ```
 
